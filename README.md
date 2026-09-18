@@ -1,57 +1,144 @@
 # Sistem Manajemen Film
 
-Aplikasi back-end PHP native untuk mengelola film dan genre. Teknologi: PHP 8+, MySQL, XAMPP, PDO, Bootstrap 5 CDN, Composer, PHPMailer, dan Git.
+## Deskripsi
 
-## Persiapan
+Sistem Manajemen Film adalah aplikasi back-end berbasis PHP yang digunakan untuk mengelola data film, genre, dan pengguna. Aplikasi ini dibuat dengan tampilan sederhana agar mudah digunakan, dipelajari, dan dipresentasikan.
 
-1. Install XAMPP, PHP 8+, Composer, Git, dan VS Code.
-2. Jalankan Apache dan MySQL dari XAMPP.
-3. Buka `http://localhost/phpmyadmin`.
-4. Klik **New** di panel kiri, masukkan `film_management`, lalu klik **Create**.
-5. Pilih database tersebut, klik tab **Import**, pilih file `database.sql`, klik **Import** atau **Go**. File ini membuat tabel `users`, `genres`, dan `movies` serta relasi foreign key.
-6. Buka terminal pada folder project dan jalankan `composer install`.
-7. Buka `http://localhost/manajemen_film/`.
+Pengguna dapat membuat akun, login, mengelola genre, serta menambahkan dan mengelola data film. Setelah registrasi, sistem dapat mengirim email konfirmasi yang berisi daftar film menggunakan PHPMailer.
 
-Alternatif phpMyAdmin: pilih database `film_management`, klik tab **SQL**, buka file `database.sql`, salin seluruh isinya ke kotak SQL, lalu klik **Go**.
+## Teknologi
 
-## Konfigurasi
+- PHP
+- MySQL dan phpMyAdmin
+- XAMPP
+- PDO
+- Bootstrap 5 melalui CDN
+- Composer
+- PHPMailer
+- Git dan GitHub
 
-Kredensial MySQL XAMPP standar ada di `config/database.php`: user `root` tanpa password. Ubah jika konfigurasi lokal Anda berbeda.
+## Fitur Utama
 
-PHPMailer dipasang dengan:
+### Autentikasi pengguna
+
+- Register pengguna
+- Login menggunakan session
+- Logout
+- Password disimpan dengan `password_hash()`
+- Password diperiksa menggunakan `password_verify()`
+
+### Manajemen pengguna
+
+- Melihat daftar pengguna
+- Mengubah nama, email, dan password
+- Menghapus pengguna lain
+- Akun yang sedang digunakan tidak dapat dihapus sendiri
+
+### Manajemen genre
+
+- Menampilkan daftar genre
+- Menambah genre
+- Mengedit genre
+- Menghapus genre
+
+### Manajemen film
+
+- Menampilkan daftar film
+- Menambah film
+- Mengedit film
+- Menghapus film
+- Memilih genre melalui dropdown
+- Menyimpan judul, sutradara, tahun rilis, dan deskripsi
+
+## Relasi Database
+
+Aplikasi menggunakan tiga tabel utama:
+
+- `users`: menyimpan data akun pengguna.
+- `genres`: menyimpan daftar genre film.
+- `movies`: menyimpan data film.
+
+Tabel `movies` memiliki foreign key `genre_id` yang terhubung ke `genres.id`. Relasi ini membuat setiap film memiliki genre yang valid.
+
+## Keamanan
+
+- PDO prepared statements digunakan untuk mengurangi risiko SQL Injection.
+- Input dibersihkan dengan sanitasi dan divalidasi di server.
+- Output ditampilkan menggunakan `htmlspecialchars()` untuk mencegah XSS.
+- Form POST menggunakan CSRF token.
+- Password menggunakan hashing satu arah dengan `password_hash()`.
+- Enkripsi dasar AES-256-CBC tersedia untuk data yang memang perlu dienkripsi.
+
+Hashing password berbeda dengan encryption. Hashing tidak dapat dikembalikan ke bentuk asli, sedangkan encryption dapat dibuka kembali menggunakan kunci.
+
+## PHPMailer
+
+PHPMailer digunakan untuk mengirim email konfirmasi setelah registrasi. Dependency dipasang dengan Composer:
 
 ```bash
-composer require phpmailer/phpmailer
+composer install
 ```
 
-Konfigurasi SMTP paling mudah diisi pada file `config/mail.local.php`. Buka file tersebut dan ganti `username` dengan email Gmail Anda serta `password` dengan **App Password**, bukan password utama email:
+Konfigurasi SMTP lokal berada di:
+
+```text
+config/mail.local.php
+```
+
+Isi file tersebut dengan email Gmail pengirim dan Google App Password:
 
 ```php
-'username' => 'email-anda@gmail.com',
-'password' => 'isi-google-app-password-di-sini',
+return [
+	'host' => 'smtp.gmail.com',
+	'port' => 587,
+	'username' => 'email-anda@gmail.com',
+	'password' => 'google-app-password',
+];
 ```
 
-Ganti password contoh tersebut dengan App Password Gmail 16 karakter milik email pengirim. Jangan gunakan password login Gmail biasa. Jika App Password ditampilkan berkelompok dengan spasi, masukkan tanpa spasi.
+Gunakan Google App Password, bukan password utama Gmail. File konfigurasi lokal sudah masuk `.gitignore` agar password tidak ikut diunggah ke GitHub.
 
-File ini sudah masuk `.gitignore`, sehingga password tidak ikut ter-upload ke GitHub. Alternatifnya, konfigurasi dapat dibaca dari environment variable:
+## Cara Menjalankan
 
-```powershell
-$env:SMTP_USERNAME="email-anda@gmail.com"
-$env:SMTP_PASSWORD="app-password-email"
+1. Install XAMPP, PHP 8+, Composer, Git, dan VS Code.
+2. Salin folder project ke `C:\xampp\htdocs\manajemen_film`.
+3. Jalankan Apache dan MySQL dari XAMPP.
+4. Buka `http://localhost/phpmyadmin`.
+5. Buat database bernama `film_management`.
+6. Pilih database tersebut, klik tab **Import**, pilih file `database.sql`, lalu klik **Go**.
+7. Jalankan `composer install` dari terminal pada folder project.
+8. Isi konfigurasi SMTP jika fitur email ingin digunakan.
+9. Buka `http://localhost/manajemen_film/`.
+
+## Alur Penggunaan
+
+1. Buka halaman register dan buat akun.
+2. Login menggunakan email dan password yang telah dibuat.
+3. Tambahkan beberapa genre melalui menu **Genre**.
+4. Tambahkan film melalui menu **Film** dan pilih genre.
+5. Gunakan tombol **Edit** atau **Hapus** untuk mengelola data.
+6. Gunakan menu **Pengguna** untuk mengelola akun lain.
+7. Logout setelah selesai menggunakan aplikasi.
+
+## Struktur Folder
+
+```text
+manajemen_film/
+├── auth/       # register, login, dan logout
+├── config/     # koneksi database dan keamanan
+├── genres/     # CRUD genre
+├── movies/     # CRUD film
+├── users/      # CRUD pengguna
+├── mail/       # konfigurasi pengiriman email
+├── partials/   # header dan footer bersama
+├── database.sql
+├── composer.json
+└── index.php
 ```
-
-Tanpa SMTP yang benar, registrasi tetap tersimpan dan kegagalan email dicatat ke log PHP.
-
-## Validasi dan keamanan
-
-- Semua query database menggunakan PDO prepared statement sehingga input tidak digabung langsung ke SQL dan risiko SQL Injection berkurang.
-- Input teks dipangkas, tag HTML dibuang, lalu divalidasi berdasarkan panjang dan tipe data.
-- Output database memakai `htmlspecialchars()` melalui helper `e()` untuk mencegah script user dieksekusi sebagai HTML (XSS).
-- Form POST dilindungi token CSRF.
-- Password disimpan dengan `password_hash()` dan diverifikasi dengan `password_verify()`. Hash password bukan encryption: hash bersifat satu arah, sedangkan encryption dapat dibuka kembali dengan kunci.
-- Contoh enkripsi dasar tersedia pada `encrypt_text()` dan `decrypt_text()` menggunakan AES-256-CBC untuk referensi registrasi session. Kunci produksi sebaiknya disimpan di environment variable `FILM_APP_KEY`.
 
 ## Git dan GitHub
+
+Repository Git lokal sudah digunakan untuk mencatat perubahan project. Untuk menghubungkan project ke GitHub:
 
 ```bash
 git init
@@ -62,11 +149,11 @@ git remote add origin https://github.com/USERNAME/manajemen_film.git
 git push -u origin main
 ```
 
-Buat repository kosong di GitHub terlebih dahulu. Untuk kolaborasi, anggota dapat memakai `git clone`, membuat branch fitur, melakukan commit, lalu mengirim Pull Request. File `.gitignore` mencegah folder `vendor`, `.env`, dan log ikut terunggah.
+Repository ini dapat dikembangkan secara kolaboratif menggunakan branch dan Pull Request.
 
-## Checklist tugas
+## Kesesuaian CPMK
 
-- CPMK091: database relational tiga tabel dan CRUD genre/film.
-- CPMK093: input, validasi, sanitasi, PDO prepared statement, CSRF, dan escaping XSS.
-- CPMK103: PHPMailer sebagai library eksternal melalui Composer.
-- CPMK104: repository Git, commit, remote GitHub, branch, dan Pull Request.
+- **CPMK091**: database relational, relasi foreign key, CRUD, PDO, dan keamanan dasar.
+- **CPMK093**: input, validasi, sanitasi, CSRF, serta perlindungan XSS dan SQL Injection.
+- **CPMK103**: penggunaan PHPMailer sebagai library eksternal melalui Composer.
+- **CPMK104**: penggunaan Git, commit, branch, GitHub, dan Pull Request untuk kolaborasi.
