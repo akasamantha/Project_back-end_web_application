@@ -72,43 +72,7 @@ Tabel `movies` memiliki foreign key `genre_id` yang terhubung ke `genres.id`. Re
 Hashing password berbeda dengan encryption. Hashing tidak dapat dikembalikan ke bentuk asli, sedangkan encryption dapat dibuka kembali menggunakan kunci.
 
 ## PHPMailer
-
-PHPMailer digunakan untuk mengirim email konfirmasi setelah registrasi. Dependency dipasang dengan Composer:
-
-```bash
-composer install
-```
-
-Konfigurasi SMTP lokal berada di:
-
-```text
-config/mail.local.php
-```
-
-Isi file tersebut dengan email Gmail pengirim dan Google App Password:
-
-```php
-return [
-	'host' => 'smtp.gmail.com',
-	'port' => 587,
-	'username' => 'email-anda@gmail.com',
-	'password' => 'google-app-password',
-];
-```
-
-Gunakan Google App Password, bukan password utama Gmail. File konfigurasi lokal sudah masuk `.gitignore` agar password tidak ikut diunggah ke GitHub.
-
-## Cara Menjalankan
-
-1. Install XAMPP, PHP 8+, Composer, Git, dan VS Code.
-2. Salin folder project ke `C:\xampp\htdocs\manajemen_film`.
-3. Jalankan Apache dan MySQL dari XAMPP.
-4. Buka `http://localhost/phpmyadmin`.
-5. Buat database bernama `film_management`.
-6. Pilih database tersebut, klik tab **Import**, pilih file `database.sql`, lalu klik **Go**.
-7. Jalankan `composer install` dari terminal pada folder project.
-8. Isi konfigurasi SMTP jika fitur email ingin digunakan.
-9. Buka `http://localhost/manajemen_film/`.
+PHPMailer digunakan untuk mengirim email konfirmasi setelah registrasi.
 
 ## Alur Penggunaan
 
@@ -137,23 +101,4 @@ manajemen_film/
 ```
 
 ## Git dan GitHub
-
-Repository Git lokal sudah digunakan untuk mencatat perubahan project. Untuk menghubungkan project ke GitHub:
-
-```bash
-git init
-git add .
-git commit -m "Initial sistem manajemen film"
-git branch -M main
-git remote add origin https://github.com/akasamantha/Project_back-end_web_application.git
-git push -u origin main
-```
-
-Repository ini dapat dikembangkan secara kolaboratif menggunakan branch dan Pull Request.
-
-## Kesesuaian CPMK
-
-- **CPMK091**: database relational, relasi foreign key, CRUD, PDO, dan keamanan dasar.
-- **CPMK093**: input, validasi, sanitasi, CSRF, serta perlindungan XSS dan SQL Injection.
-- **CPMK103**: penggunaan PHPMailer sebagai library eksternal melalui Composer.
-- **CPMK104**: penggunaan Git, commit, branch, GitHub, dan Pull Request untuk kolaborasi.
+Repository Git lokal sudah digunakan untuk mencatat perubahan project. 
