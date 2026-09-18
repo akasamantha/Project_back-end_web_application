@@ -22,6 +22,7 @@ $flashMessage = get_flash();
                 <?php if (!empty($_SESSION['user'])): ?>
                     <li class="nav-item"><a class="nav-link" href="/manajemen_film/movies/index.php">Film</a></li>
                     <li class="nav-item"><a class="nav-link" href="/manajemen_film/genres/index.php">Genre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/manajemen_film/users/index.php">Pengguna</a></li>
                 <?php endif; ?>
             </ul>
             <div class="d-flex align-items-center gap-2">

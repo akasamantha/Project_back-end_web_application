@@ -33,10 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $statement = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
             $statement->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT)]);
+            $movieStatement = $pdo->query('SELECT movies.title, movies.director, movies.release_year, genres.name AS genre_name FROM movies JOIN genres ON genres.id = movies.genre_id ORDER BY movies.release_year DESC, movies.title ASC');
+            $movies = $movieStatement->fetchAll();
             require_once __DIR__ . '/../mail/mailer.php';
-            send_registration_email($email, $name);
+            $emailSent = send_registration_email($email, $name, $movies);
             $_SESSION['registration_reference'] = encrypt_text($email);
-            flash('success', 'Registrasi berhasil. Silakan login.');
+            flash($emailSent ? 'success' : 'warning', $emailSent
+                ? 'Registrasi berhasil. Email konfirmasi dan daftar film sudah dikirim.'
+                : 'Registrasi berhasil, tetapi email tidak terkirim. Periksa konfigurasi SMTP dan folder log PHP.');
             redirect('/manajemen_film/auth/login.php');
         }
     }

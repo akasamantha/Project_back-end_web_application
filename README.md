@@ -24,7 +24,16 @@ PHPMailer dipasang dengan:
 composer require phpmailer/phpmailer
 ```
 
-Konfigurasi SMTP dibaca dari environment variable `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, dan `SMTP_PASSWORD`. Isi dengan email dan **App Password** milik sendiri, bukan password utama email. Jangan commit rahasia ke GitHub. Contoh Windows PowerShell:
+Konfigurasi SMTP paling mudah diisi pada file `config/mail.local.php`. Buka file tersebut dan ganti `username` dengan email Gmail Anda serta `password` dengan **App Password**, bukan password utama email:
+
+```php
+'username' => 'email-anda@gmail.com',
+'password' => 'isi-google-app-password-di-sini',
+```
+
+Ganti password contoh tersebut dengan App Password Gmail 16 karakter milik email pengirim. Jangan gunakan password login Gmail biasa. Jika App Password ditampilkan berkelompok dengan spasi, masukkan tanpa spasi.
+
+File ini sudah masuk `.gitignore`, sehingga password tidak ikut ter-upload ke GitHub. Alternatifnya, konfigurasi dapat dibaca dari environment variable:
 
 ```powershell
 $env:SMTP_USERNAME="email-anda@gmail.com"
