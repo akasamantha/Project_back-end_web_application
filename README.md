@@ -145,7 +145,7 @@ git init
 git add .
 git commit -m "Initial sistem manajemen film"
 git branch -M main
-git remote add origin https://github.com/USERNAME/manajemen_film.git
+git remote add origin https://github.com/akasamantha/Project_back-end_web_application.git
 git push -u origin main
 ```
 
