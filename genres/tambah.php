@@ -1,0 +1,27 @@
+<?php
+require_once __DIR__ . '/../config/bootstrap.php';
+require_login();
+$errors = [];
+$name = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
+    $name = clean_string($_POST['name'] ?? null);
+    if ($name === '' || strlen($name) > 100) $errors[] = 'Nama genre wajib diisi dan maksimal 100 karakter.';
+    if (!$errors) {
+        $check = $pdo->prepare('SELECT id FROM genres WHERE name = ? LIMIT 1');
+        $check->execute([$name]);
+        if ($check->fetch()) $errors[] = 'Genre tersebut sudah ada.';
+        else {
+            $statement = $pdo->prepare('INSERT INTO genres (name) VALUES (?)');
+            $statement->execute([$name]);
+            flash('success', 'Genre berhasil ditambahkan.');
+            redirect('index.php');
+        }
+    }
+}
+$pageTitle = 'Tambah Genre'; require __DIR__ . '/../partials/header.php';
+?>
+<h1 class="h3 mb-3">Tambah Genre</h1>
+<?php foreach ($errors as $error): ?><div class="alert alert-danger"><?= e($error) ?></div><?php endforeach; ?>
+<form method="post" class="bg-white border rounded p-4 col-md-6"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><div class="mb-3"><label class="form-label" for="name">Nama genre</label><input class="form-control" id="name" name="name" value="<?= e($name) ?>" required maxlength="100"></div><button class="btn btn-primary">Simpan</button> <a class="btn btn-secondary" href="index.php">Batal</a></form>
+<?php require __DIR__ . '/../partials/footer.php'; ?>
